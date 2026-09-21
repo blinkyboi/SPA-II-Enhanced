@@ -1,5 +1,5 @@
 If you downloaded the latest version (v2.0.5) from https://www.gta5-mods.com/scripts/single-player-apartment-spg-net then all you need to do is replace `SPAII.dll` currently in your 'scripts' folder with the one provided in 'SPAII\bin\Release'. Then reload the game. 
-
+---
 ### Work done
 Commented out two functions that call `RegisterDecor` function. See snippet below:
 ```c++
