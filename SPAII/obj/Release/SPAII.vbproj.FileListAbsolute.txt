@@ -28,3 +28,14 @@ C:\Users\Blinky\Desktop\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.vbpr
 C:\Users\Blinky\Desktop\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.dll
 C:\Users\Blinky\Desktop\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.xml
 C:\Users\Blinky\Desktop\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.pdb
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\bin\Release\SPAII.dll
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\bin\Release\SPAII.pdb
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\bin\Release\SPAII.xml
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.vbproj.AssemblyReference.cache
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.Resources.resources
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.vbproj.GenerateResource.cache
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.vbproj.CoreCompileInputs.cache
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.vbproj.Up2Date
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.dll
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.xml
+C:\Users\Blinky\Desktop\GTAV-Mods-Workspace\SPA-II-master\SPA-II-master\SPAII\obj\Release\SPAII.pdb

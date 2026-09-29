@@ -12,12 +12,7 @@ Imports NFunc = GTA.Native.Function
 
 Public Class SPA2
     Inherits Script
-
     Public Sub New()
-        Decor.Unlock()
-        Decor.Register(vehIdDecor, Decor.eDecorType.Int)
-        Decor.Register(vehUidDecor, Decor.eDecorType.Int)
-        Decor.Lock()
 
         GenerateModConfig()
         LoadModConfig()

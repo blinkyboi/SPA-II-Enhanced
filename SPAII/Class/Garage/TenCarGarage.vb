@@ -241,15 +241,63 @@ Public Module TenCarGarage
         End Try
     End Sub
 
+    'Public Sub LoadVehiclesSetPlayerPos(uid As Integer)
+    '    Try
+    '        LoadVehicles()
+
+    '        Dim target As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = uid)
+    '        If target.Exists Then
+    '            Game.Player.Character.Position = target.Position
+    '            target.SetPlayerIntoVehicle
+    '        End If
+    '    Catch ex As Exception
+    '        Logger.Log($"{ex.Message} {ex.StackTrace}")
+    '    End Try
+    'End Sub
+    ''THIS METHOD (LoadVehiclesSetPlayerPos) ABOVE WAS PATCHED WITH THE SAFER ALTERNATIVE BELOW THIS COMMENT
     Public Sub LoadVehiclesSetPlayerPos(uid As Integer)
         Try
             LoadVehicles()
 
-            Dim target As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = uid)
-            If target.Exists Then
-                Game.Player.Character.Position = target.Position
-                target.SetPlayerIntoVehicle
+            Dim savedVeh As VehicleClass = Apartment.Vehicles.Find(Function(v) v.UniqueID = uid)
+
+            If savedVeh Is Nothing Then
+                Logger.Log($"TenCarGarage: could not find saved vehicle UID {uid} after loading vehicles.")
+                Return
             End If
+
+            Dim target As Vehicle = Nothing
+
+            Select Case savedVeh.Index
+                Case 0
+                    target = Vehicle0
+                Case 1
+                    target = Vehicle1
+                Case 2
+                    target = Vehicle2
+                Case 3
+                    target = Vehicle3
+                Case 4
+                    target = Vehicle4
+                Case 5
+                    target = Vehicle5
+                Case 6
+                    target = Vehicle6
+                Case 7
+                    target = Vehicle7
+                Case 8
+                    target = Vehicle8
+                Case 9
+                    target = Vehicle9
+            End Select
+
+            If target Is Nothing OrElse Not target.Exists() Then
+                Logger.Log($"TenCarGarage: could not find spawned vehicle for slot {savedVeh.Index}.")
+                Return
+            End If
+
+            Game.Player.Character.Position = target.Position
+            target.SetPlayerIntoVehicle()
         Catch ex As Exception
             Logger.Log($"{ex.Message} {ex.StackTrace}")
         End Try
@@ -369,10 +417,42 @@ Public Module TenCarGarage
                     FadeScreen(1)
 
                     Audio.PlaySoundAt(PP, "GARAGE_DOOR_SCRIPTED_CLOSE")
-                    Dim curVeh As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = Game.Player.Character.CurrentVehicle.GetInt(vehUidDecor) AndAlso x.GetInt(vehIdDecor) = Apartment.ID)
-                    Dim bd = Apartment.Building
+                    'Dim curVeh As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = Game.Player.Character.CurrentVehicle.GetInt(vehUidDecor) AndAlso x.GetInt(vehIdDecor) = Apartment.ID)
+                    'Code above replaced with safer code below this comment
+                    Dim curVeh As Vehicle = Game.Player.Character.CurrentVehicle
+                    Dim savedVeh As VehicleClass = Nothing
 
+                    If Vehicle0 IsNot Nothing AndAlso Vehicle0.Exists() AndAlso Vehicle0.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 0)
+                    ElseIf Vehicle1 IsNot Nothing AndAlso Vehicle1.Exists() AndAlso Vehicle1.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 1)
+                    ElseIf Vehicle2 IsNot Nothing AndAlso Vehicle2.Exists() AndAlso Vehicle2.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 2)
+                    ElseIf Vehicle3 IsNot Nothing AndAlso Vehicle3.Exists() AndAlso Vehicle3.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 3)
+                    ElseIf Vehicle4 IsNot Nothing AndAlso Vehicle4.Exists() AndAlso Vehicle4.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 4)
+                    ElseIf Vehicle5 IsNot Nothing AndAlso Vehicle5.Exists() AndAlso Vehicle5.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 5)
+                    ElseIf Vehicle6 IsNot Nothing AndAlso Vehicle6.Exists() AndAlso Vehicle6.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 6)
+                    ElseIf Vehicle7 IsNot Nothing AndAlso Vehicle7.Exists() AndAlso Vehicle7.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 7)
+                    ElseIf Vehicle8 IsNot Nothing AndAlso Vehicle8.Exists() AndAlso Vehicle8.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 8)
+                    ElseIf Vehicle9 IsNot Nothing AndAlso Vehicle9.Exists() AndAlso Vehicle9.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 9)
+                    End If
+
+                    If savedVeh Is Nothing Then
+                        Logger.Log("TenCarGarage: could not resolve the saved vehicle slot during garage exit.")
+                        FadeScreen(0)
+                        Exit Sub
+                    End If
+
+                    Dim bd = Apartment.Building
                     Dim newVeh As Vehicle
+
                     If Apartment.Building.GarageDoor = eFrontDoor.StandardDoor Then
                         Game.Player.Character.Position = bd.GarageWaypoint.ToVector3
                         newVeh = curVeh.CloneVehicle(bd.GarageWaypoint.ToVector3, bd.GarageWaypoint.W, False)
@@ -380,6 +460,14 @@ Public Module TenCarGarage
                         Game.Player.Character.Position = bd.GarageOutPos.ToVector3
                         newVeh = curVeh.CloneVehicle(bd.GarageOutPos.ToVector3, bd.GarageOutPos.W, False)
                     End If
+
+                    'Added nonetype safety nets
+                    If newVeh Is Nothing OrElse Not newVeh.Exists() Then
+                        Logger.Log("TenCarGarage: failed to clone the vehicle during garage exit.")
+                        FadeScreen(0)
+                        Exit Sub
+                    End If
+
                     With newVeh
                         .AddBlip()
                         .CurrentBlip.Sprite = newVeh.Model.GetProperBlipSprite
@@ -398,6 +486,7 @@ Public Module TenCarGarage
                         .PlaceOnGround()
                     End With
                     outVehicleList.Add(newVeh)
+                    outVehicleIdentity(newVeh.Handle) = Tuple.Create(savedVeh.ApartmentID, savedVeh.UniqueID)
                     If Apartment.Building.GarageDoor = eFrontDoor.StandardDoor Then
                         newVeh.Position = bd.GarageWaypoint.ToVector3
                     Else

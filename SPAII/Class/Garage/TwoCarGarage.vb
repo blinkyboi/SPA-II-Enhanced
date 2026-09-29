@@ -131,15 +131,48 @@ Module TwoCarGarage
         End Try
     End Sub
 
+    'Public Sub LoadVehiclesSetPlayerPos(uid As Integer)
+    '    Try
+    '        LoadVehicles()
+
+    '        Dim target As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = uid)
+    '        If target.Exists Then
+    '            Game.Player.Character.Position = target.Position
+    '            target.SetPlayerIntoVehicle
+    '        End If
+    '    Catch ex As Exception
+    '        Logger.Log($"{ex.Message} {ex.StackTrace}")
+    '    End Try
+    'End Sub
+
+    'Code above replaced with type-safe alternative below this comment
     Public Sub LoadVehiclesSetPlayerPos(uid As Integer)
         Try
             LoadVehicles()
 
-            Dim target As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = uid)
-            If target.Exists Then
-                Game.Player.Character.Position = target.Position
-                target.SetPlayerIntoVehicle
+            Dim savedVeh As VehicleClass = Apartment.Vehicles.Find(Function(v) v.UniqueID = uid)
+
+            If savedVeh Is Nothing Then
+                Logger.Log($"TwoCarGarage: could not find saved vehicle UID {uid} after loading vehicles.")
+                Return
             End If
+
+            Dim target As Vehicle = Nothing
+
+            Select Case savedVeh.Index
+                Case 0
+                    target = Vehicle0
+                Case 1
+                    target = Vehicle1
+            End Select
+
+            If target Is Nothing OrElse Not target.Exists() Then
+                Logger.Log($"TwoCarGarage: could not find spawned vehicle for slot {savedVeh.Index}.")
+                Return
+            End If
+
+            Game.Player.Character.Position = target.Position
+            target.SetPlayerIntoVehicle()
         Catch ex As Exception
             Logger.Log($"{ex.Message} {ex.StackTrace}")
         End Try
@@ -233,10 +266,26 @@ Module TwoCarGarage
                     FadeScreen(1)
 
                     Audio.PlaySoundAt(PP, "GARAGE_DOOR_SCRIPTED_CLOSE")
-                    Dim curVeh As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = Game.Player.Character.CurrentVehicle.GetInt(vehUidDecor) AndAlso x.GetInt(vehIdDecor) = Apartment.ID)
-                    Dim bd = Apartment.Building
+                    'Dim curVeh As Vehicle = Vehicles.Find(Function(x) x.GetInt(vehUidDecor) = Game.Player.Character.CurrentVehicle.GetInt(vehUidDecor) AndAlso x.GetInt(vehIdDecor) = Apartment.ID)
+                    'Code above replaced with safer code below this comment
+                    Dim curVeh As Vehicle = Game.Player.Character.CurrentVehicle
+                    Dim savedVeh As VehicleClass = Nothing
 
+                    If Vehicle0 IsNot Nothing AndAlso Vehicle0.Exists() AndAlso Vehicle0.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 0)
+                    ElseIf Vehicle1 IsNot Nothing AndAlso Vehicle1.Exists() AndAlso Vehicle1.Handle = curVeh.Handle Then
+                        savedVeh = Apartment.Vehicles.Find(Function(v) v.Index = 1)
+                    End If
+
+                    If savedVeh Is Nothing Then
+                        Logger.Log("TwoCarGarage: could not resolve the saved vehicle slot during garage exit.")
+                        FadeScreen(0)
+                        Exit Sub
+                    End If
+
+                    Dim bd = Apartment.Building
                     Dim newVeh As Vehicle
+
                     If Apartment.Building.GarageDoor = eFrontDoor.StandardDoor Then
                         Game.Player.Character.Position = bd.GarageWaypoint.ToVector3
                         newVeh = curVeh.CloneVehicle(bd.GarageWaypoint.ToVector3, bd.GarageWaypoint.W, False)
@@ -244,6 +293,14 @@ Module TwoCarGarage
                         Game.Player.Character.Position = bd.GarageOutPos.ToVector3
                         newVeh = curVeh.CloneVehicle(bd.GarageOutPos.ToVector3, bd.GarageOutPos.W, False)
                     End If
+
+                    'Added nonetype safety nets
+                    If newVeh Is Nothing OrElse Not newVeh.Exists() Then
+                        Logger.Log("TwoCarGarage: failed to clone the vehicle during garage exit.")
+                        FadeScreen(0)
+                        Exit Sub
+                    End If
+
                     With newVeh
                         .AddBlip()
                         .CurrentBlip.Sprite = newVeh.Model.GetProperBlipSprite
@@ -262,6 +319,7 @@ Module TwoCarGarage
                         .PlaceOnGround()
                     End With
                     outVehicleList.Add(newVeh)
+                    outVehicleIdentity(newVeh.Handle) = Tuple.Create(savedVeh.ApartmentID, savedVeh.UniqueID)
                     If Apartment.Building.GarageDoor = eFrontDoor.StandardDoor Then
                         newVeh.Position = bd.GarageWaypoint.ToVector3
                     Else

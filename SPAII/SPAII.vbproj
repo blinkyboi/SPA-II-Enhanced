@@ -45,17 +45,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="iFruitAddon2">
-      <HintPath>E:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\scripts\iFruitAddon2.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\Grand Theft Auto V\scripts\iFruitAddon2.dll</HintPath>
     </Reference>
     <Reference Include="INMNativeUI">
-      <HintPath>E:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\scripts\INMNativeUI.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\Grand Theft Auto V\scripts\INMNativeUI.dll</HintPath>
     </Reference>
     <Reference Include="Metadata">
-      <HintPath>E:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\scripts\Metadata.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\Grand Theft Auto V\scripts\Metadata.dll</HintPath>
     </Reference>
     <Reference Include="ScriptHookVDotNet2, Version=2.10.9.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\ScriptHookVDotNet2.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\Grand Theft Auto V\ScriptHookVDotNet2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -144,8 +144,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY "$(TargetDir)$(TargetFileName)" "E:\Program Files (x86)\Steam\SteamApps\common\Grand Theft Auto V\scripts"
-COPY "$(TargetDir)$(TargetName).pdb" "E:\Program Files (x86)\Steam\SteamApps\common\Grand Theft Auto V\scripts"</PostBuildEvent>
+    <PostBuildEvent>COPY "$(TargetDir)$(TargetFileName)" "G:\SteamLibrary\SteamApps\common\Grand Theft Auto V\scripts"
+COPY "$(TargetDir)$(TargetName).pdb" "G:\SteamLibrary\SteamApps\common\Grand Theft Auto V\scripts"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

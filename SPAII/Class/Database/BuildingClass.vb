@@ -540,23 +540,34 @@ Public Class BuildingClass
                 If PP.IsInVehicle Then
                     'In Vehicle
                     Dim currVeh = PP.CurrentVehicle
-                    Dim FromApartment = currVeh.GetInt(vehIdDecor)
-                    Dim UniqueID = currVeh.GetInt(vehUidDecor)
+                    Dim FromApartment As Integer = 0
+                    Dim UniqueID As Integer = 0
+                    Dim originalIdentity As Tuple(Of Integer, Integer) = Nothing
+
+                    If outVehicleIdentity.TryGetValue(currVeh.Handle, originalIdentity) Then
+                        FromApartment = originalIdentity.Item1
+                        UniqueID = originalIdentity.Item2
+                    End If
 
                     PP.Task.WarpOutOfVehicle(PP.CurrentVehicle)
 
-                    Select Case FromApartment
-                        Case 0
-                            'Nothing need to do for this step
-                        Case selectedApt.ID
-                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{selectedApt.GarageFilePath}\{UniqueID}.xml"
-                            If File.Exists(ExistingFileToDelete) Then File.Delete(ExistingFileToDelete)
-                        Case Else
-                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{Helper.apartments.Find(Function(x) x.ID = FromApartment).GarageFilePath}\{UniqueID}.xml"
-                            If File.Exists(ExistingFileToDelete) Then File.Delete(ExistingFileToDelete)
-                    End Select
+                    If FromApartment <> 0 AndAlso UniqueID <> 0 Then
+                        Dim sourceApartment As ApartmentClass = Helper.apartments.Find(Function(x) x.ID = FromApartment)
 
-                    If currVeh.IsCurrentVehicleExistInList Then outVehicleList.Remove(currVeh)
+                        If sourceApartment IsNot Nothing Then
+                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{sourceApartment.GarageFilePath}\{UniqueID}.xml"
+
+                            If File.Exists(ExistingFileToDelete) Then
+                                File.Delete(ExistingFileToDelete)
+                            End If
+                        End If
+                    End If
+
+                    If currVeh.IsCurrentVehicleExistInList Then
+                        outVehicleList.Remove(currVeh)
+                    End If
+                    outVehicleIdentity.Remove(currVeh.Handle)
+
                     Dim uid As Integer = Guid.NewGuid.GetHashCode
                     Dim newVeh As New VehicleData($"{grgXmlPath}{selectedApt.GarageFilePath}\{uid}.xml", New VehicleClass(currVeh, GetPlayer, selectedApt.ID, uid, GetAvailableIndex(selectedApt.Vehicles, GarageType)))
                     newVeh.Save()
@@ -581,23 +592,34 @@ Public Class BuildingClass
                 If PP.IsInVehicle Then
                     'In Vehicle
                     Dim currVeh = PP.CurrentVehicle
-                    Dim FromApartment = currVeh.GetInt(vehIdDecor)
-                    Dim UniqueID = currVeh.GetInt(vehUidDecor)
+                    Dim FromApartment As Integer = 0
+                    Dim UniqueID As Integer = 0
+                    Dim originalIdentity As Tuple(Of Integer, Integer) = Nothing
+
+                    If outVehicleIdentity.TryGetValue(currVeh.Handle, originalIdentity) Then
+                        FromApartment = originalIdentity.Item1
+                        UniqueID = originalIdentity.Item2
+                    End If
 
                     PP.Task.WarpOutOfVehicle(PP.CurrentVehicle)
 
-                    Select Case FromApartment
-                        Case 0
-                            'Nothing need to do for this step
-                        Case selectedApt.ID
-                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{selectedApt.GarageFilePath}\{UniqueID}.xml"
-                            If File.Exists(ExistingFileToDelete) Then File.Delete(ExistingFileToDelete)
-                        Case Else
-                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{Helper.apartments.Find(Function(x) x.ID = FromApartment).GarageFilePath}\{UniqueID}.xml"
-                            If File.Exists(ExistingFileToDelete) Then File.Delete(ExistingFileToDelete)
-                    End Select
+                    If FromApartment <> 0 AndAlso UniqueID <> 0 Then
+                        Dim sourceApartment As ApartmentClass = Helper.apartments.Find(Function(x) x.ID = FromApartment)
 
-                    If currVeh.IsCurrentVehicleExistInList Then outVehicleList.Remove(currVeh)
+                        If sourceApartment IsNot Nothing Then
+                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{sourceApartment.GarageFilePath}\{UniqueID}.xml"
+
+                            If File.Exists(ExistingFileToDelete) Then
+                                File.Delete(ExistingFileToDelete)
+                            End If
+                        End If
+                    End If
+
+                    If currVeh.IsCurrentVehicleExistInList Then
+                        outVehicleList.Remove(currVeh)
+                    End If
+                    outVehicleIdentity.Remove(currVeh.Handle)
+
                     Dim uid As Integer = Guid.NewGuid.GetHashCode
                     Dim newVeh As New VehicleData($"{grgXmlPath}{selectedApt.GarageFilePath}\{uid}.xml", New VehicleClass(currVeh, GetPlayer, selectedApt.ID, uid, GetAvailableIndex(selectedApt.Vehicles, GarageType)))
                     newVeh.Save()
@@ -622,23 +644,35 @@ Public Class BuildingClass
                 If PP.IsInVehicle Then
                     'In Vehicle
                     Dim currVeh = PP.CurrentVehicle
-                    Dim FromApartment = currVeh.GetInt(vehIdDecor)
-                    Dim UniqueID = currVeh.GetInt(vehUidDecor)
+                    Dim FromApartment As Integer = 0
+                    Dim UniqueID As Integer = 0
+
+                    Dim originalIdentity As Tuple(Of Integer, Integer) = Nothing
+
+                    If outVehicleIdentity.TryGetValue(currVeh.Handle, originalIdentity) Then
+                        FromApartment = originalIdentity.Item1
+                        UniqueID = originalIdentity.Item2
+                    End If
 
                     PP.Task.WarpOutOfVehicle(PP.CurrentVehicle)
 
-                    Select Case FromApartment
-                        Case 0
-                            'Nothing need to do for this step
-                        Case selectedApt.ID
-                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{selectedApt.GarageFilePath}\{UniqueID}.xml"
-                            If File.Exists(ExistingFileToDelete) Then File.Delete(ExistingFileToDelete)
-                        Case Else
-                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{Helper.apartments.Find(Function(x) x.ID = FromApartment).GarageFilePath}\{UniqueID}.xml"
-                            If File.Exists(ExistingFileToDelete) Then File.Delete(ExistingFileToDelete)
-                    End Select
+                    If FromApartment <> 0 AndAlso UniqueID <> 0 Then
+                        Dim sourceApartment As ApartmentClass = Helper.apartments.Find(Function(x) x.ID = FromApartment)
 
-                    If currVeh.IsCurrentVehicleExistInList Then outVehicleList.Remove(currVeh)
+                        If sourceApartment IsNot Nothing Then
+                            Dim ExistingFileToDelete As String = $"{grgXmlPath}{sourceApartment.GarageFilePath}\{UniqueID}.xml"
+
+                            If File.Exists(ExistingFileToDelete) Then
+                                File.Delete(ExistingFileToDelete)
+                            End If
+                        End If
+                    End If
+
+                    If currVeh.IsCurrentVehicleExistInList Then
+                        outVehicleList.Remove(currVeh)
+                    End If
+
+                    outVehicleIdentity.Remove(currVeh.Handle)
                     Dim uid As Integer = Guid.NewGuid.GetHashCode
                     Dim newVeh As New VehicleData($"{grgXmlPath}{selectedApt.GarageFilePath}\{uid}.xml", New VehicleClass(currVeh, GetPlayer, selectedApt.ID, uid, GetAvailableIndex(selectedApt.Vehicles, GarageType)))
                     newVeh.Save()
