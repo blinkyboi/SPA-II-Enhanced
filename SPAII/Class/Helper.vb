@@ -30,6 +30,7 @@ Module Helper
     Public buildingsLoaded As Boolean = False
     Public forSaleSignSpawned As Boolean = False
     Public outVehicleList As New List(Of Vehicle)
+    Public outVehicleIdentity As New Dictionary(Of Integer, Tuple(Of Integer, Integer))
     Public debug3rdLine As String = "Nothing to show now"
 
     Public PP As Ped
@@ -281,10 +282,12 @@ Module Helper
                 .ToggleExtra(15, vehClass.Extra15)
                 .RoofState = vehClass.RoofState
                 .DirtLevel = 0F
-                If IsNitroModInstalled() Then .SetInt(nitroModDecor, vehClass.HasNitro)
+                If IsNitroModInstalled() Then
+                    .SetInt(nitroModDecor, vehClass.HasNitro)
+                End If
                 .IsPersistent = True
                 .SetInt(vehIdDecor, aptID)
-                .SetInt(vehUidDecor, vehClass.UniqueID)
+                .SetInt(vehUidDecor, vehClass.UniqueID)    
             End With
         End If
         model.MarkAsNoLongerNeeded()
@@ -363,7 +366,19 @@ Module Helper
 
     <Extension>
     Public Function CloneVehicle(source As Vehicle, pos As Vector2, head As Single, Optional cloneDamage As Boolean = False) As Vehicle
+        'Add some nonetype safety
+        If source Is Nothing OrElse Not source.Exists() Then
+            Logger.Log("CloneVehicle: source vehicle was missing or no longer exists.")
+            Return Nothing
+        End If
+
         Dim newVeh As Vehicle = WorldCreateVehicle(source.Model, pos, head)
+        'Add some nonetype safety
+        If newVeh Is Nothing OrElse Not newVeh.Exists() Then
+            Logger.Log("CloneVehicle: failed to create the replacement vehicle.")
+            Return Nothing
+        End If
+
         With newVeh
             .InstallModKit()
             .WheelType = source.WheelType
@@ -450,7 +465,10 @@ Module Helper
             .ToggleExtra(15, source.IsExtraOn(15))
             .RoofState = source.RoofState
             .DirtLevel = source.DirtLevel
-            If IsNitroModInstalled() Then .SetInt(nitroModDecor, source.GetInt(nitroModDecor))
+            If IsNitroModInstalled() Then
+                .SetInt(nitroModDecor, source.GetInt(nitroModDecor))
+            End If
+
             .IsPersistent = True
             .SetInt(vehIdDecor, source.GetInt(vehIdDecor))
             .SetInt(vehUidDecor, source.GetInt(vehUidDecor))
